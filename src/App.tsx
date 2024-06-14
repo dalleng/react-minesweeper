@@ -1,9 +1,10 @@
 import './App.css'
-import Board from './Board'
+import MinesweeperBoard, { type CellContent } from './MinesweeperBoard'
 
 function App() {
+  const board: CellContent[][] = [['FLAG', 2], ['BOMB', 0]]
   return (
-    <Board />
+    <MinesweeperBoard board={board} />
   )
 }
 

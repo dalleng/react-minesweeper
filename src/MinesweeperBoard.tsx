@@ -1,6 +1,5 @@
 import './MinesweeperBoard.css'
-
-export type CellContent = 'FLAG' | 'BOMB' | number
+import { CellContent } from './logic'
 
 interface MinesweeperBoardProps {
     board: CellContent[][]
@@ -12,10 +11,10 @@ export default function MinesweeperBoard({ board }: MinesweeperBoardProps): JSX.
             return '⛳️'
         } else if (value === 'BOMB') {
             return '💣'
-        } else if (value > 0) {
-            return value
+        } else if (value === 'UNOPENED') {
+            return ''
         }
-        return ''
+        return value
     }
 
     return (

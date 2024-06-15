@@ -9,9 +9,9 @@ export default function MinesweeperBoard({ board }: MinesweeperBoardProps): JSX.
     const renderCellValue = (value: CellContent): string | number => {
         if (value === 'FLAG') {
             return '⛳️'
-        } else if (value === 'BOMB') {
+        } else if (value === 'MINE') {
             return '💣'
-        } else if (value === 'UNOPENED') {
+        } else if (value === 0 || value === 'UNOPENED') {
             return ''
         }
         return value

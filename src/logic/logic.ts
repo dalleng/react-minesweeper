@@ -75,6 +75,7 @@ export function expandCell(gameState: GameState, start: Position): Board  {
 
 export function updateGame(gameState: GameState, action: Action): GameState {
     const newGameState: GameState = { ...gameState }
+    newGameState.board = gameState.board.map(row => [...row])
     switch (action.type) {
         case 'OPEN_CELL': {
             if (gameState.status === 'UNSTARTED') {
@@ -84,6 +85,18 @@ export function updateGame(gameState: GameState, action: Action): GameState {
                 newGameState.minePositions = positions
             }
             newGameState.board = expandCell(newGameState, action.position)
+            break
+        }
+        case 'PLACE_FLAG': {
+            if (['UNSTARTED', 'WIN', 'LOSE'].includes(gameState.status)) {
+                break
+            }
+            const [row, col] = action.position
+            if (newGameState.board[row][col] === 'FLAG') {
+                newGameState.board[row][col] = 'UNOPENED'
+            } else {
+                newGameState.board[row][col] = 'FLAG'
+            }
             break
         }
         default: {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { expandCell, getRandomMinePositions, getSurroundingPositions, initializeGame, updateGame } from './logic'
-import { Board, GameState, Position } from './types';
+import { Board, GameState, GameStatus, Position } from './types';
 
 describe('initializeGame', () => {
     it('initializes game with given board size', () => {
@@ -15,16 +15,47 @@ describe('initializeGame', () => {
 })
 
 describe('updateGame', () => {
-    it('place mines on first OPEN_CELL action', () => {
-        const N = 10;
-        const state = initializeGame(N);
-        const { status, minePositions } = updateGame(state, { type: 'OPEN_CELL', position: [0, 0] })
-        // the first cell opened should not be a mine
-        expect(minePositions.filter(([row, col]) => row == 0 && col == 0).length).toBe(0)
-        // random mines should've been placed
-        expect(minePositions.length).toBeGreaterThan(0)
-        // status should be updated to ongoing
-        expect(status).toEqual('ONGOING')
+    describe('OPEN_CELL action', () => {
+        it('place mines on first action', () => {
+            const N = 10;
+            const state = initializeGame(N);
+            const { status, minePositions } = updateGame(state, { type: 'OPEN_CELL', position: [0, 0] })
+            // the first cell opened should not be a mine
+            expect(minePositions.filter(([row, col]) => row == 0 && col == 0).length).toBe(0)
+            // random mines should've been placed
+            expect(minePositions.length).toBeGreaterThan(0)
+            // status should be updated to ongoing
+            expect(status).toEqual('ONGOING')
+        })
+    })
+    describe('PLACE_FLAG action', () => {
+        it('places flag if cell is UNOPENED', () => {
+            const N = 10;
+            let state = initializeGame(N);
+            state.status = 'ONGOING'
+            expect(state.board[1][1]).toEqual('UNOPENED')
+            state = updateGame(state, { type: 'PLACE_FLAG', position: [1, 1] })
+            expect(state.board[1][1]).toEqual('FLAG')
+        })
+
+        it('removes flag if cell has FLAG', () => {
+            const N = 10;
+            let state = initializeGame(N);
+            state.status = 'ONGOING'
+            state.board[1][1] = 'FLAG'
+            state = updateGame(state, { type: 'PLACE_FLAG', position: [1, 1] })
+            expect(state.board[1][1]).toEqual('UNOPENED')
+        })
+
+        it.each([['UNSTARTED'], ['WIN'], ['LOSE']])('does not do anything if game is in state UNSTARTED, WIN OR LOSE', (status) => {
+            const N = 10;
+            let state = initializeGame(N);
+            state.status = status as GameStatus
+            expect(state.board[1][1]).toEqual('UNOPENED')
+            state = updateGame(state, { type: 'PLACE_FLAG', position: [1, 1] })
+            // board doesn't change as game is unstarted, win or lose
+            expect(state.board[1][1]).toEqual('UNOPENED')
+        })
     })
 })
 

@@ -28,7 +28,7 @@ export default function MinesweeperBoard({ board }: MinesweeperBoardProps): JSX.
                                     className="cell"
                                     data-row={rowNum}
                                     data-col={colNum}
-                                    key={`${rowNum}${colNum}`}>
+                                    key={`${rowNum},${colNum}`}>
                                     {renderCellValue(value)}
                                 </div>
                             )}

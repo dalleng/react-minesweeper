@@ -83,7 +83,7 @@ export function updateGame(gameState: GameState, action: Action): GameState {
                 newGameState.status = 'ONGOING'
                 newGameState.minePositions = positions
             }
-            // expandCell
+            newGameState.board = expandCell(newGameState, action.position)
             break
         }
         default: {

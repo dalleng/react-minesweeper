@@ -5,7 +5,7 @@ import { Board, GameState, Position } from './types';
 describe('initializeGame', () => {
     it('initializes game with given board size', () => {
         const N = 10;
-        const { board, bombPositions, status } = initializeGame(N)
+        const { board, minePositions: bombPositions, status } = initializeGame(N)
         expect(status).toBe('UNSTARTED')
         expect(bombPositions).toStrictEqual([])
         expect(board.length).toBe(N)
@@ -18,11 +18,11 @@ describe('updateGame', () => {
     it('place mines on first OPEN_CELL action', () => {
         const N = 10;
         const state = initializeGame(N);
-        const { board, status, bombPositions } = updateGame(state, { type: 'OPEN_CELL', position: [0, 0] })
+        const { status, minePositions } = updateGame(state, { type: 'OPEN_CELL', position: [0, 0] })
         // the first cell opened should not be a mine
-        expect(board[0][0]).not.toEqual('BOMB')
+        expect(minePositions.filter(([row, col]) => row == 0 && col == 0).length).toBe(0)
         // random mines should've been placed
-        expect(bombPositions.length).toBeGreaterThan(0)
+        expect(minePositions.length).toBeGreaterThan(0)
         // status should be updated to ongoing
         expect(status).toEqual('ONGOING')
     })
@@ -56,7 +56,7 @@ describe('expandCell', () => {
             ['UNOPENED', 'UNOPENED'],
             ['UNOPENED', 'UNOPENED'],
         ]
-        const gameState: GameState = { board, status: 'ONGOING', bombPositions: []}
+        const gameState: GameState = { board, status: 'ONGOING', minePositions: []}
         const updatedBoard = expandCell(gameState, [0, 0])
         console.log(updatedBoard)
         expect(updatedBoard.every(row => row.every(col => col === 0))).toBeTruthy()
@@ -67,7 +67,7 @@ describe('expandCell', () => {
             ['UNOPENED', 'UNOPENED'],
             ['UNOPENED', 'FLAG'],
         ]
-        const gameState: GameState = { board, status: 'ONGOING', bombPositions: []}
+        const gameState: GameState = { board, status: 'ONGOING', minePositions: []}
         const updatedBoard = expandCell(gameState, [0, 0])
         expect(updatedBoard[1][1]).toEqual('FLAG')
         expect(updatedBoard.flat().filter(e => e != 'FLAG').length).toEqual(3)
@@ -79,7 +79,7 @@ describe('expandCell', () => {
             ['UNOPENED', 'UNOPENED'],
             ['UNOPENED', 'UNOPENED'],
         ]
-        const gameState: GameState = { board, status: 'ONGOING', bombPositions: [[2, 1]]}
+        const gameState: GameState = { board, status: 'ONGOING', minePositions: [[2, 1]]}
         const updatedBoard = expandCell(gameState, [0, 0])
         // Updates cells with the numbers of surrounding bombs
         expect(updatedBoard).toEqual([
@@ -96,7 +96,7 @@ describe('getSurroundingPositions', () => {
             ['UNOPENED', 'UNOPENED'],
             ['UNOPENED', 'UNOPENED'],
         ]
-        const gameState: GameState = { board, status: 'ONGOING', bombPositions: []}
+        const gameState: GameState = { board, status: 'ONGOING', minePositions: []}
         const expectedPositions = JSON.stringify([[0, 1], [1, 0], [1, 1]])
         const actualPositions = getSurroundingPositions(gameState, [0, 0])
         expect(JSON.stringify(actualPositions)).toEqual(expectedPositions)
@@ -108,7 +108,7 @@ describe('getSurroundingPositions', () => {
             ['UNOPENED', 'UNOPENED', 'UNOPENED'],
             ['UNOPENED', 'UNOPENED', 'UNOPENED'],
         ]
-        const gameState: GameState = { board, status: 'ONGOING', bombPositions: []}
+        const gameState: GameState = { board, status: 'ONGOING', minePositions: []}
         const expectedPositions = JSON.stringify([[0, 0], [0, 1], [0, 2], [1, 0], [1, 2], [2, 0], [2, 1], [2, 2]])
         const actualPositions = getSurroundingPositions(gameState, [1, 1])
         expect(JSON.stringify(actualPositions)).toEqual(expectedPositions)

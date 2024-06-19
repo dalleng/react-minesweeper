@@ -6,7 +6,7 @@ export type Board = CellContent[][]
 
 export interface GameState {
     board: Board;
-    bombPositions: number[][];
+    minePositions: number[][];
     status: GameStatus;
 }
 

@@ -78,6 +78,9 @@ export function updateGame(gameState: GameState, action: Action): GameState {
     newGameState.board = gameState.board.map(row => [...row])
     switch (action.type) {
         case 'OPEN_CELL': {
+            if (['WIN', 'LOSE'].includes(gameState.status)) {
+                break
+            }
             if (gameState.status === 'UNSTARTED') {
                 const nMines = Math.floor(gameState.board.length * FREE_TO_MINE_RATIO)
                 const positions = getRandomMinePositions(gameState.board, nMines, [action.position])

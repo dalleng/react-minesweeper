@@ -16,6 +16,16 @@ describe('initializeGame', () => {
 
 describe('updateGame', () => {
     describe('OPEN_CELL action', () => {
+        it.each([['WIN'], ['LOSE']])('does not do anything if game is in state WIN OR LOSE', (invalidStatus) => {
+            const N = 10;
+            const state = initializeGame(N);
+            state.status = invalidStatus as GameStatus
+            const { status, minePositions, board } = updateGame(state, { type: 'OPEN_CELL', position: [0, 0] })
+            expect(status).toEqual(invalidStatus)
+            expect(minePositions.length).toEqual(0)
+            expect(board.every(row => row.every(cell => cell === 'UNOPENED')))
+        })
+
         it('place mines on first action', () => {
             const N = 10;
             const state = initializeGame(N);

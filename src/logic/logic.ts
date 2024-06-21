@@ -32,7 +32,6 @@ export function getRandomMinePositions(board: Board, numberOfMines: number, excl
     }
     return positions
 }
-
 export function getSurroundingPositions(gameState: GameState, start: Position): Position[] {
     const positions: Position[] = []
     for (let i = -1; i <= 1; i++) {
@@ -53,22 +52,23 @@ export function expandCell(gameState: GameState, start: Position): Board  {
     const frontier = [start]
     const seen = new Set()
     const newBoard = gameState.board.map(row => [...row])
-    const minePositionsSet = new Set(gameState.minePositions.map(([row, col]) => `${row},${col}`))
+    const minePositionsSet = new Set(gameState.minePositions.map(pos => pos.toString()))
 
     while (frontier.length > 0) {
         const current = frontier.pop() as Position
-        seen.add(`${current[0]},${current[1]}`)
+        seen.add(current.toString())
 
         // check if there are surrounding mines
         const surroundingMines = getSurroundingPositions(gameState, current).filter(
-            ([row, col]) => minePositionsSet.has(`${row},${col}`)
+            pos => minePositionsSet.has(pos.toString())
         ).length
         newBoard[current[0]][current[1]] = surroundingMines
 
         if (surroundingMines == 0) {
-            for (const [nextRow, nextCol] of getSurroundingPositions(gameState, current)) {
-                if (!seen.has(`${nextRow},${nextCol}`) && gameState.board[nextRow][nextCol] === 'UNOPENED') {
-                    frontier.push([nextRow, nextCol])
+            for (const pos of getSurroundingPositions(gameState, current)) {
+                const [nextRow, nextCol] = pos
+                if (!seen.has(pos.toString()) && gameState.board[nextRow][nextCol] === 'UNOPENED') {
+                    frontier.push(pos)
                 }
             }
         }
@@ -112,6 +112,7 @@ export function updateGame(gameState: GameState, action: Action): GameState {
             }
 
             newGameState.board = expandCell(newGameState, action.position)
+
             break
         }
         case 'PLACE_FLAG': {

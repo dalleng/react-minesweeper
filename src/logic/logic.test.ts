@@ -197,9 +197,8 @@ describe('getSurroundingPositions', () => {
             ['UNOPENED', 'UNOPENED'],
         ]
         const gameState: GameState = { board, status: 'ONGOING', minePositions: []}
-        const expectedPositions = JSON.stringify([[0, 1], [1, 0], [1, 1]])
         const actualPositions = getSurroundingPositions(gameState, [0, 0])
-        expect(JSON.stringify(actualPositions)).toEqual(expectedPositions)
+        expect(actualPositions).toEqual([[0, 1], [1, 0], [1, 1]])
     })
 
     it('returns all surrounding positions', () => {
@@ -209,8 +208,7 @@ describe('getSurroundingPositions', () => {
             ['UNOPENED', 'UNOPENED', 'UNOPENED'],
         ]
         const gameState: GameState = { board, status: 'ONGOING', minePositions: []}
-        const expectedPositions = JSON.stringify([[0, 0], [0, 1], [0, 2], [1, 0], [1, 2], [2, 0], [2, 1], [2, 2]])
         const actualPositions = getSurroundingPositions(gameState, [1, 1])
-        expect(JSON.stringify(actualPositions)).toEqual(expectedPositions)
+        expect(actualPositions).toEqual([[0, 0], [0, 1], [0, 2], [1, 0], [1, 2], [2, 0], [2, 1], [2, 2]])
     })
 })

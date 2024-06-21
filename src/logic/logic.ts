@@ -82,7 +82,7 @@ export function updateGame(gameState: GameState, action: Action): GameState {
                 break
             }
             if (gameState.status === 'UNSTARTED') {
-                const nMines = Math.floor(gameState.board.length * FREE_TO_MINE_RATIO)
+                const nMines = Math.floor(gameState.board.length ** 2 * FREE_TO_MINE_RATIO)
                 const positions = getRandomMinePositions(gameState.board, nMines, [action.position])
                 newGameState.status = 'ONGOING'
                 newGameState.minePositions = positions

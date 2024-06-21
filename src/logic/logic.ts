@@ -78,15 +78,29 @@ export function updateGame(gameState: GameState, action: Action): GameState {
     newGameState.board = gameState.board.map(row => [...row])
     switch (action.type) {
         case 'OPEN_CELL': {
+            // Don't do anything if game is already lost or won
             if (['WIN', 'LOSE'].includes(gameState.status)) {
                 break
             }
+
+            // Set the status to lose if a mine cell is opened
+            if (gameState.minePositions.filter(([row, col]) => row == action.position[0] && col == action.position[1]).length) {
+                newGameState.status = 'LOSE'
+                // reveal all mines
+                gameState.minePositions.forEach(([row, col]) => {
+                    newGameState.board[row][col] = 'MINE'
+                })
+                break
+            }
+
+            // Place initial mines if game is 'UNSTARTED'
             if (gameState.status === 'UNSTARTED') {
                 const nMines = Math.floor(gameState.board.length ** 2 * FREE_TO_MINE_RATIO)
                 const positions = getRandomMinePositions(gameState.board, nMines, [action.position])
                 newGameState.status = 'ONGOING'
                 newGameState.minePositions = positions
             }
+
             newGameState.board = expandCell(newGameState, action.position)
             break
         }
@@ -106,5 +120,6 @@ export function updateGame(gameState: GameState, action: Action): GameState {
             break
         }
     }
+
     return newGameState
 }

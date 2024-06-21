@@ -37,6 +37,16 @@ describe('updateGame', () => {
             // status should be updated to ongoing
             expect(status).toEqual('ONGOING')
         })
+
+        it('game is lost if a position with a mine is opened', () => {
+            const N = 10;
+            let state = initializeGame(N);
+            state = updateGame(state, { type: 'OPEN_CELL', position: [0, 0] })
+            state = updateGame(state, { type: 'OPEN_CELL', position: state.minePositions[0] as Position })
+            expect(state.status).toEqual('LOSE')
+            const [row, col] = state.minePositions[0]
+            expect(state.board[row][col]).toEqual('MINE')
+        })
     })
     describe('PLACE_FLAG action', () => {
         it('places flag if cell is UNOPENED', () => {

@@ -1,3 +1,7 @@
+#board {
+    margin: 5px;
+}
+
 .cell {
     display: inline-block;
     border: 1px solid black;

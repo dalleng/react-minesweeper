@@ -99,7 +99,6 @@ describe('expandCell', () => {
         ]
         const gameState: GameState = { board, status: 'ONGOING', minePositions: []}
         const updatedBoard = expandCell(gameState, [0, 0])
-        console.log(updatedBoard)
         expect(updatedBoard.every(row => row.every(col => col === 0))).toBeTruthy()
     })
 

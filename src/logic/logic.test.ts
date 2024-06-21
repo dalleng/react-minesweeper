@@ -94,10 +94,11 @@ describe('getRandomMinePositions', () => {
         const N = 10;
         const { board } = initializeGame(N);
         const nMines = 30
-        const excluded: Position[] =  [[0, 0], [2, 2], [9, 9]]
+        const excluded: Position[] = [[0, 0], [2, 2], [9, 9]]
         const positions = getRandomMinePositions(board, nMines, excluded)
+        const positionsSet = new Set(positions.map(pos => pos.toString()))
         // excluded positions should not be used
-        excluded.forEach(ex => expect(positions.includes(ex)).toBeFalsy())
+        expect(excluded.every(pos => !positionsSet.has(pos.toString())))
     })
 })
 

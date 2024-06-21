@@ -18,11 +18,15 @@ export function initializeGame(boardSize: number): GameState {
 
 export function getRandomMinePositions(board: Board, numberOfMines: number, exclude: Position[]): Position[] {
     const positions: Position[] = []
+    const seen = new Set()
+    const excludeSet = new Set(exclude.map(pos => pos.toString()))
+
     while (numberOfMines > 0) {
         const row = Math.floor(Math.random() * board.length)
         const col = Math.floor(Math.random() * board.length)
-        if (!positions.includes([row, col]) && !exclude.includes([row, col])) {
+        if (!seen.has([row, col].toString()) && !excludeSet.has([row, col].toString())) {
             positions.push([row, col])
+            seen.add([row, col].toString())
             numberOfMines--
         }
     }

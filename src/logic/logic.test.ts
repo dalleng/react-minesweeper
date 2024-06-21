@@ -47,6 +47,55 @@ describe('updateGame', () => {
             const [row, col] = state.minePositions[0]
             expect(state.board[row][col]).toEqual('MINE')
         })
+
+        it('game is won if all cells are opened and all mines flagged', () => {
+            const board: Board = [
+                [0, 0],
+                [1, 1],
+                ['UNOPENED', 'UNOPENED'],
+            ]
+            let gameState: GameState = { board, status: 'ONGOING', minePositions: [[2, 1]]}
+            gameState = updateGame(gameState, { type: 'OPEN_CELL', position: [2, 0] })
+            gameState = updateGame(gameState, { type: 'PLACE_FLAG', position: [2, 1] })
+            expect(gameState.status).toEqual('WIN')
+            expect(gameState.board).toEqual([
+                [0, 0],
+                [1, 1],
+                [1, 'FLAG']
+            ])
+        })
+
+        it('game is not won if all cells are opened but not all mines flagged', () => {
+            const board: Board = [
+                [0, 0],
+                [1, 1],
+                [1, 'UNOPENED'],
+            ]
+            let gameState: GameState = { board, status: 'ONGOING', minePositions: [[2, 1]]}
+            gameState = updateGame(gameState, { type: 'OPEN_CELL', position: [2, 0] })
+            expect(gameState.status).toEqual('ONGOING')
+            expect(gameState.board).toEqual([
+                [0, 0],
+                [1, 1],
+                [1, 'UNOPENED']
+            ])
+        })
+
+        it('game is not won if not all cells are opened and all mines flagged', () => {
+            const board: Board = [
+                [0, 0],
+                [1, 1],
+                ['UNOPENED', 'UNOPENED'],
+            ]
+            let gameState: GameState = { board, status: 'ONGOING', minePositions: [[2, 1]]}
+            gameState = updateGame(gameState, { type: 'PLACE_FLAG', position: [2, 1] })
+            expect(gameState.status).toEqual('ONGOING')
+            expect(gameState.board).toEqual([
+                [0, 0],
+                [1, 1],
+                ['UNOPENED', 'FLAG']
+            ])
+        })
     })
     describe('PLACE_FLAG action', () => {
         it('places flag if cell is UNOPENED', () => {

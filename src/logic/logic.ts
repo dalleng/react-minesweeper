@@ -77,6 +77,12 @@ export function expandCell(gameState: GameState, start: Position): Board  {
     return newBoard
 }
 
+export function isGameWon(gameState: GameState): boolean {
+    const unopenedPositions = gameState.board.flat().filter(cell => cell === 'UNOPENED').length
+    const allMinesFlagged = gameState.minePositions.every(([row, col]) => gameState.board[row][col] === 'FLAG')
+    return allMinesFlagged && unopenedPositions == 0
+}
+
 export function updateGame(gameState: GameState, action: Action): GameState {
     const newGameState: GameState = { ...gameState }
     newGameState.board = gameState.board.map(row => [...row])
@@ -124,6 +130,11 @@ export function updateGame(gameState: GameState, action: Action): GameState {
             break
         }
     }
+
+    if (isGameWon(newGameState)) {
+        newGameState.status = 'WIN'
+    }
+
 
     return newGameState
 }

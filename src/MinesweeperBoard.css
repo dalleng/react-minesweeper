@@ -3,7 +3,9 @@
 }
 
 .cell {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     width: 50px;
     height: 50px;
     vertical-align: top;
@@ -11,4 +13,16 @@
     border-right: rgb(128, 128, 128) 3px solid;
     border-bottom: rgb(128, 128, 128) 3px solid;
     border-top: rgb(255, 255, 255) 3px solid;
+}
+
+.cell.red {
+    color: red;
+}
+
+.cell.green {
+    color: green;
+}
+
+.cell.blue {
+    color: blue;
 }

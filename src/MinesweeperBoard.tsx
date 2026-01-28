@@ -14,14 +14,14 @@ export default function MinesweeperBoard({ board, onClick }: MinesweeperBoardPro
             return '⛳️'
         } else if (value === 'MINE') {
             return '💣'
-        } else if (value === 'UNOPENED') {
+        } else if (value === 'UNOPENED' || value === 0) {
             return ''
         }
         return value
     }
 
     const onCellClick = (e: React.MouseEvent<HTMLDivElement>) => {
-        const {row, col} = (e.target as HTMLElement).dataset
+        const { row, col } = (e.target as HTMLElement).dataset
         if (row && col) {
             onClick(parseInt(row), parseInt(col), 'CLICK')
         }
@@ -29,7 +29,7 @@ export default function MinesweeperBoard({ board, onClick }: MinesweeperBoardPro
 
     const onRightClick = (e: React.MouseEvent<HTMLDivElement>) => {
         e.preventDefault()
-        const {row, col} = (e.target as HTMLElement).dataset
+        const { row, col } = (e.target as HTMLElement).dataset
         if (row && col) {
             onClick(parseInt(row), parseInt(col), 'RIGHT-CLICK')
         }
@@ -41,16 +41,28 @@ export default function MinesweeperBoard({ board, onClick }: MinesweeperBoardPro
                 (row: CellContent[], rowNum: number) => {
                     return (
                         <div key={`${rowNum}`}>
-                            {row.map((value, colNum) =>
-                                <div
-                                    className="cell"
+                            {row.map((value, colNum) => {
+                                const cellValue = renderCellValue(value)
+                                let className = "cell";
+                                if (typeof(cellValue) == "number") {
+                                    if (cellValue == 1) {
+                                        className = "cell blue"
+                                    } else if (cellValue == 2) {
+                                        className = "cell green"
+                                    } else {
+                                        className = "cell red"
+                                    }
+                                }
+                                return (<div
+                                    className={className}
                                     data-row={rowNum}
                                     data-col={colNum}
                                     key={`${rowNum},${colNum}`}
                                     onContextMenu={onRightClick}
                                     onClick={onCellClick}>
-                                    {renderCellValue(value)}
-                                </div>
+                                    {cellValue}
+                                </div>)
+                            }
                             )}
                         </div>
                     )

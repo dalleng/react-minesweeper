@@ -1,5 +1,9 @@
 #board {
     margin: 5px;
+    border-right: rgb(128, 128, 128) 3px solid;
+    border-bottom: rgb(128, 128, 128) 3px solid;
+    border-top: rgb(255, 255, 255) 3px solid;
+    border-left: rgb(255, 255, 255) 3px solid;
 }
 
 .cell {

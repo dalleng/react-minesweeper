@@ -32,6 +32,7 @@ export function getRandomMinePositions(board: Board, numberOfMines: number, excl
     }
     return positions
 }
+
 export function getSurroundingPositions(gameState: GameState, start: Position): Position[] {
     const positions: Position[] = []
     for (let i = -1; i <= 1; i++) {

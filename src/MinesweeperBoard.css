@@ -17,6 +17,7 @@
     border-right: rgb(128, 128, 128) 3px solid;
     border-bottom: rgb(128, 128, 128) 3px solid;
     border-top: rgb(255, 255, 255) 3px solid;
+    border-left: rgb(255, 255, 255) 3px solid;
 }
 
 .cell.red {
@@ -29,4 +30,9 @@
 
 .cell.blue {
     color: blue;
+}
+
+.cell.open {
+    border: 1px solid rgb(128, 128, 128);
+    background-color: rgb(192, 192, 192);
 }

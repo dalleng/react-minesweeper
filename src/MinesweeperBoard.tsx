@@ -14,7 +14,7 @@ export default function MinesweeperBoard({ board, onClick }: MinesweeperBoardPro
             return '⛳️'
         } else if (value === 'MINE') {
             return '💣'
-        } else if (value === 'UNOPENED' || value === 0) {
+        } else if (value === 'UNOPENED') {
             return ''
         }
         return value
@@ -45,12 +45,14 @@ export default function MinesweeperBoard({ board, onClick }: MinesweeperBoardPro
                                 const cellValue = renderCellValue(value)
                                 let className = "cell";
                                 if (typeof(cellValue) == "number") {
-                                    if (cellValue == 1) {
-                                        className = "cell blue"
+                                    if (cellValue == 0) {
+                                        className = "cell open"
+                                    } else if (cellValue == 1) {
+                                        className = "cell blue open"
                                     } else if (cellValue == 2) {
-                                        className = "cell green"
+                                        className = "cell green open"
                                     } else {
-                                        className = "cell red"
+                                        className = "cell red open"
                                     }
                                 }
                                 return (<div
@@ -60,7 +62,7 @@ export default function MinesweeperBoard({ board, onClick }: MinesweeperBoardPro
                                     key={`${rowNum},${colNum}`}
                                     onContextMenu={onRightClick}
                                     onClick={onCellClick}>
-                                    {cellValue}
+                                    {cellValue !== 0 ? cellValue : ""}
                                 </div>)
                             }
                             )}

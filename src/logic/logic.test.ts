@@ -116,7 +116,7 @@ describe('updateGame', () => {
             expect(state.board[1][1]).toEqual('UNOPENED')
         })
 
-        it.each([['UNSTARTED'], ['WIN'], ['LOSE']])('does not do anything if game is in state UNSTARTED, WIN OR LOSE', (status) => {
+        it.each([['WIN'], ['LOSE']])('does not do anything if game is in state WIN OR LOSE', (status) => {
             const N = 10;
             let state = initializeGame(N);
             state.status = status as GameStatus

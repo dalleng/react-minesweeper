@@ -85,15 +85,25 @@ export function isGameWon(gameState: GameState): boolean {
 }
 
 export function updateGame(gameState: GameState, action: Action): GameState {
+    // Don't do anything if game is already lost or won
+    if (['WIN', 'LOSE'].includes(gameState.status)) {
+        return gameState
+    }
+
     const newGameState: GameState = { ...gameState }
     newGameState.board = gameState.board.map(row => [...row])
+
+    // Place initial mines if game is 'UNSTARTED'
+    if (gameState.status === 'UNSTARTED') {
+        const nMines = Math.floor(gameState.board.length ** 2 * FREE_TO_MINE_RATIO)
+        // avoid placing a mine on the position the user just clicked
+        const positions = getRandomMinePositions(gameState.board, nMines, [action.position])
+        newGameState.status = 'ONGOING'
+        newGameState.minePositions = positions
+    }
+
     switch (action.type) {
         case 'OPEN_CELL': {
-            // Don't do anything if game is already lost or won
-            if (['WIN', 'LOSE'].includes(gameState.status)) {
-                break
-            }
-
             // Set the status to lose if a mine cell is opened
             if (gameState.minePositions.filter(([row, col]) => row == action.position[0] && col == action.position[1]).length) {
                 newGameState.status = 'LOSE'
@@ -103,23 +113,10 @@ export function updateGame(gameState: GameState, action: Action): GameState {
                 })
                 break
             }
-
-            // Place initial mines if game is 'UNSTARTED'
-            if (gameState.status === 'UNSTARTED') {
-                const nMines = Math.floor(gameState.board.length ** 2 * FREE_TO_MINE_RATIO)
-                const positions = getRandomMinePositions(gameState.board, nMines, [action.position])
-                newGameState.status = 'ONGOING'
-                newGameState.minePositions = positions
-            }
-
             newGameState.board = expandCell(newGameState, action.position)
-
             break
         }
         case 'PLACE_FLAG': {
-            if (['UNSTARTED', 'WIN', 'LOSE'].includes(gameState.status)) {
-                break
-            }
             const [row, col] = action.position
             if (newGameState.board[row][col] === 'FLAG') {
                 newGameState.board[row][col] = 'UNOPENED'
@@ -136,7 +133,6 @@ export function updateGame(gameState: GameState, action: Action): GameState {
     if (isGameWon(newGameState)) {
         newGameState.status = 'WIN'
     }
-
 
     return newGameState
 }

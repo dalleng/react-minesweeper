@@ -28,7 +28,6 @@ export default function MinesweeperBoard({ board, onClick }: MinesweeperBoardPro
     const onTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
         isTouchRef.current = true
         const { row, col } = (e.target as HTMLElement).dataset
-        console.log("onLongPressStart", row, col)
         if (row && col) {
             setLongPressStart(Date.now())
         }

@@ -28,11 +28,24 @@ function App() {
 
   return (
     <div>
-      <h1>{renderStatus(gameState)}</h1>
+      <h1>{`Status: ${renderStatus(gameState)}`}</h1>
       {gameState.status !== 'UNSTARTED' && 
         <button onClick={resetGame}>Reset</button>
       }
       <MinesweeperBoard board={gameState.board} onClick={onClickBoard} />
+      <p>
+        <h2>How To Play?</h2>
+        <h3>On Mobile:</h3>
+        <ul>
+          <li>Tap to open a cell</li>
+          <li>Long Press to place a flag</li>
+        </ul>
+        <h3>On Desktop:</h3>
+        <ul>
+          <li>Click to open a cell</li>
+          <li>Long Press to place a flag</li>
+        </ul>
+      </p>
     </div>
   )
 }

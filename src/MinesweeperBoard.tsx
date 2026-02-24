@@ -38,6 +38,7 @@ export default function MinesweeperBoard({ board, onClick }: MinesweeperBoardPro
         const { row, col } = (e.target as HTMLElement).dataset
         const now = Date.now()
         if (row && col && longPressStart) {
+            // long press to place a flag
             if (now - longPressStart >= LONG_PRESS_THRESHOLD) {
                 onClick(parseInt(row), parseInt(col), 'RIGHT-CLICK')
             } else {
@@ -45,9 +46,11 @@ export default function MinesweeperBoard({ board, onClick }: MinesweeperBoardPro
             }
         }
         setTimeout(() => isTouchRef.current = false, 300)
+        setLongPressStart(null)
     }
 
     const onCellClick = (e: React.MouseEvent<HTMLDivElement>) => {
+        // avoid the click event handler if it's a touch event
         if (isTouchRef.current) {
             return
         }
@@ -58,6 +61,7 @@ export default function MinesweeperBoard({ board, onClick }: MinesweeperBoardPro
     }
 
     const onRightClick = (e: React.MouseEvent<HTMLDivElement>) => {
+        // avoid the click event handler if it's a touch event
         if (isTouchRef.current) {
             return
         }
@@ -76,7 +80,7 @@ export default function MinesweeperBoard({ board, onClick }: MinesweeperBoardPro
                         <div key={`${rowNum}`}>
                             {row.map((value, colNum) => {
                                 const cellValue = renderCellValue(value)
-                                let className = "cell";
+                                let className = "cell"
                                 if (typeof(cellValue) == "number") {
                                     if (cellValue == 0) {
                                         className = "cell open"
